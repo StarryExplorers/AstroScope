@@ -3,9 +3,8 @@
   "short_name": "AstroScope",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1e3c72",
-  "theme_color": "#2a5298",
-  "description": "Explore the universe with APODs, Mars photos, NASA images, exoplanets & more!",
+  "background_color": "#0a0f2c",
+  "theme_color": "#1e3c72",
   "icons": [
     {
       "src": "icon-192.png",
