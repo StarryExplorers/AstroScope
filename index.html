@@ -1,185 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AstroScope 🚀</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icon-192.png" />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 1rem;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: white;
-      text-align: center;
-    }
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    section {
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: #ffffff11;
-      border-radius: 1rem;
-      max-width: 900px;
-    }
-    img {
-      width: 100%;
-      max-width: 600px;
-      border-radius: 1rem;
-      margin-top: 1rem;
-    }
-    input, select, button {
-      padding: 0.8rem;
-      margin: 0.5rem;
-      font-size: 1rem;
-      border-radius: 0.7rem;
-      border: none;
-    }
-    button {
-      background: #5a67d8;
-      color: white;
-      cursor: pointer;
-    }
-    #gallery, #mars-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    figure {
-      max-width: 280px;
-      background: #ffffff22;
-      padding: 1rem;
-      border-radius: 1rem;
-    }
-    figure img {
-      width: 100%;
-      border-radius: 1rem;
-    }
-    a.download-btn {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.4rem 1rem;
-      background: #48bb78;
-      color: white;
-      border-radius: 0.5rem;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AstroScope 🚀</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon-192.png" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    margin:0; padding:1rem;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color:white; text-align:center;
+  }
+  h1 { font-size:2.4rem; margin-bottom:1rem; }
+  section {
+    margin:2rem auto; padding:1.5rem;
+    background:#ffffff11; border-radius:1rem;
+    max-width:800px; display:none;
+  }
+  section.active { display:block; }
+  input,select,button {
+    padding:.8rem; margin:.5rem;
+    font-size:1rem; border-radius:.7rem; border:none;
+  }
+  button { background:#5a67d8; color:white; cursor:pointer; }
+  img {
+    width:100%; max-width:600px;
+    border-radius:1rem; margin-top:1rem;
+  }
+  .gallery img {
+    width:100%; max-width:300px;
+    border-radius:1rem; margin: .5rem;
+  }
+  .tabs { display:flex; justify-content:center;
+    flex-wrap:wrap; gap:1rem; margin-bottom:1rem;
+  }
+  .tabs button {
+    background:#ffffff22; border:1px solid #ffffff44;
+    color:white; border-radius:.7rem;
+    padding:.7rem 1.2rem;
+  }
+</style>
 </head>
 <body>
-  <h1>🔭 AstroScope</h1>
 
-  <!-- APOD -->
-  <section>
-    <h2>🌌 Astronomy Picture of the Day</h2>
-    <input type="date" id="apod-date" />
-    <button onclick="getAPOD()">Get Picture</button>
-    <div id="apod-result">
-      <h3 id="apod-title"></h3>
-      <img id="apod-img" src="" style="display:none;" />
-      <a id="apod-download" class="download-btn" style="display:none;" download>⬇️ Download</a>
-      <p id="apod-desc"></p>
-    </div>
-  </section>
+<h1>🔭 AstroScope</h1>
 
-  <!-- Mars Rover -->
-  <section>
-    <h2>🚗 Mars Rover Photos</h2>
-    <select id="rover">
-      <option value="curiosity">Curiosity</option>
-      <option value="opportunity">Opportunity</option>
-      <option value="spirit">Spirit</option>
-    </select>
-    <input type="date" id="mars-date" max="2023-12-31" />
-    <button onclick="getMarsPhotos()">📷 Show Photos</button>
-    <div id="mars-gallery"></div>
-  </section>
+<div class="tabs">
+  <button onclick="switchTab('apod')">🌌 APOD</button>
+  <button onclick="switchTab('mars-rover')">🚗 Mars Rover</button>
+  <button onclick="switchTab('asteroids')">☄️ Asteroids</button>
+  <button onclick="switchTab('people')">👩‍🚀 People</button>
+  <button onclick="switchTab('gallery')">🖼️ Media Search</button>
+  <button onclick="switchTab('exoplanets')">🪐 Exoplanet Explorer</button>
+  <button onclick="switchTab('space info')">📘 Astro Terms</button>
+</div>
 
-  <!-- NASA Image Search -->
-  <section>
-    <h2>🖼️ NASA Image & Video Gallery</h2>
-    <input type="text" id="search-query" placeholder="Try galaxy, nebula, moon..." />
-    <button onclick="searchNASA()">🔍 Search</button>
-    <div id="gallery"></div>
-  </section>
+<!-- APOD -->
+<section id="apod">
+  <h2>📷 Astronomy Picture of the Day</h2>
+  <input type="date" id="apod-date" />
+  <button onclick="getAPOD()">Get Picture</button>
+  <div>
+    <h3 id="apod-title"></h3>
+    <img id="apod-img" src="" style="display:none">
+    <p id="apod-desc"></p>
+  </div>
+</section>
 
-  <!-- Exoplanets (same API search) -->
-  <section>
-    <h2>🪐 Exoplanet Hunt</h2>
-    <button onclick="searchNASA('exoplanet')">🌍 Find Exoplanets</button>
-  </section>
+<!-- Mars -->
+<section id="mars-rover">
+  <h2>🚗 Mars Rover Photos</h2>
+  <select id="rover"><option>curiosity</option><option>opportunity</option><option>spirit</option></select>
+  <input type="date" id="mars-date" max="2023-12-31" />
+  <button onclick="getMarsPhotos()">Show Photos</button>
+  <div id="mars-gallery"></div>
+</section>
 
-  <!-- Space Info -->
+<!-- Asteroids -->
+<section id="asteroids">
+  <h2>☄️ Asteroid Close Approaches</h2>
+  <input type="date" id="asteroid-date" max="2025-12-31" />
+  <button onclick="getAsteroids()">Get Approaches</button>
+  <div id="asteroid-list"></div>
+</section>
+
+<!-- People -->
+<section id="people">
+  <h2>👩‍🚀 People in Space</h2>
+  <button onclick="fetchPeople()">Refresh</button>
+  <div id="peopleList"></div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery">
+  <h2>🖼️ NASA Image & Video Search</h2>
+  <input type="text" id="gallery-query" placeholder="e.g. Saturn" />
+  <button onclick="searchGallery()">Search</button>
+  <div id="gallery-results" class="gallery"></div>
+</section>
+
+<!-- Exoplanets -->
+<section id="exoplanets">
+  <h2>🪐 Exoplanet Explorer</h2>
+  <input type="text" id="exo-query" placeholder="e.g. kepler, TRAPPIST-1" />
+  <button onclick="searchExoplanets()">Search Planets</button>
+  <div id="exo-results"></div>
+</section>
+
+<!-- Space Info -->
   <section>
     <h2>📘 Astro Terms</h2>
     <p><strong>Nebula:</strong> A giant cloud of gas and dust in space, where stars are born 🌠</p>
     <p><strong>Galaxy:</strong> A massive group of stars, dust, and dark matter bound together — like the Milky Way! 🌌</p>
     <p><strong>Exoplanet:</strong> A planet that orbits a star outside our solar system 🪐</p>
     <p><strong>Rover:</strong> A robotic space explorer that drives on planets like Mars 🤖</p>
-  </section>
+  </section>  
 
-  <script>
-    const API_KEY = "GoahzBndb1f0dDBn6OoWFi8qphcYSbKfD4kN7B6N";
+<script>
+  const API_KEY = "GoahzBndb1f0dDBn6OoWFi8qphcYSbKfD4kN7B6N";
 
-    async function getAPOD() {
-      const date = document.getElementById("apod-date").value;
-      const res = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${date}`);
-      const data = await res.json();
-      const img = document.getElementById("apod-img");
-      const btn = document.getElementById("apod-download");
-      img.src = data.url;
-      document.getElementById("apod-title").textContent = data.title;
-      document.getElementById("apod-desc").textContent = data.explanation;
-      if (data.media_type === "image") {
-        img.style.display = "block";
-        btn.href = data.hdurl || data.url;
-        btn.style.display = "inline-block";
-      } else {
-        img.style.display = "none";
-        btn.style.display = "none";
-      }
+  function switchTab(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+  switchTab("apod");
+
+  async function getAPOD() {
+    const date=document.getElementById("apod-date").value;
+    const url=`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${date}`;
+    try {
+      const d=await fetch(url).then(r=>r.json());
+      document.getElementById("apod-title").textContent=d.title;
+      const img=document.getElementById("apod-img");
+      if (d.media_type==="image") { img.src=d.url; img.style.display="block"; }
+      else img.style.display="none";
+      document.getElementById("apod-desc").textContent=d.explanation;
+    } catch {
+      document.getElementById("apod-title").textContent="Error loading APOD.";
     }
+  }
 
-    async function getMarsPhotos() {
-      const rover = document.getElementById("rover").value;
-      const date = document.getElementById("mars-date").value;
-      const gallery = document.getElementById("mars-gallery");
-      gallery.innerHTML = "Loading...";
-      const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=${API_KEY}`);
-      const data = await res.json();
-      gallery.innerHTML = "";
-      data.photos.slice(0, 10).forEach(photo => {
-        const fig = document.createElement("figure");
-        fig.innerHTML = `<img src="${photo.img_src}" alt="Mars photo"><a class="download-btn" href="${photo.img_src}" download>⬇️ Download</a>`;
-        gallery.appendChild(fig);
+  async function getMarsPhotos() {
+    const rover=document.getElementById("rover").value, date=document.getElementById("mars-date").value, g=document.getElementById("mars-gallery");
+    g.innerHTML="Loading...";
+    try {
+      const d=await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=${API_KEY}`)
+                  .then(r=>r.json());
+      if (!d.photos.length) return g.innerHTML="No photos found.";
+      g.innerHTML="";
+      d.photos.slice(0,9).forEach(p=>{
+        const i=document.createElement("img");
+        i.src=p.img_src; g.appendChild(i);
       });
+    } catch {
+      g.innerHTML="Error loading Mars photos.";
     }
+  }
 
-    async function searchNASA(queryOverride = "") {
-      const query = queryOverride || document.getElementById("search-query").value;
-      const gallery = document.getElementById("gallery");
-      gallery.innerHTML = "Searching...";
-      const res = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image`);
-      const data = await res.json();
-      gallery.innerHTML = "";
-      const items = data.collection.items.slice(0, 12);
-      for (const item of items) {
-        const imgUrl = item.links?.[0]?.href;
-        const title = item.data?.[0]?.title || "NASA Image";
-        const fig = document.createElement("figure");
-        fig.innerHTML = `<img src="${imgUrl}" alt="${title}"><a class="download-btn" href="${imgUrl}" download>⬇️ Download</a>`;
-        gallery.appendChild(fig);
-      }
+  async function getAsteroids() {
+    const date=document.getElementById("asteroid-date").value, l=document.getElementById("asteroid-list");
+    l.innerHTML="Loading...";
+    try {
+      const d=await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=${API_KEY}`)
+                    .then(r=>r.json());
+      const neos=d.near_earth_objects[date]||[];
+      if (!neos.length) return l.innerHTML="No asteroids found.";
+      l.innerHTML="";
+      neos.slice(0,9).forEach(n=>{
+        const div=document.createElement("div");
+        div.style= "background:#ffffff22; border-radius:1rem; padding:1rem; margin:1rem 0;";
+        div.innerHTML=`
+          <strong>${n.name}</strong><br>
+          Dia: ${n.estimated_diameter.meters.estimated_diameter_max.toFixed(1)} m<br>
+          Speed: ${parseFloat(n.close_approach_data[0].relative_velocity.kilometers_per_hour).toFixed(2)} km/h<br>
+          Dist: ${parseFloat(n.close_approach_data[0].miss_distance.kilometers).toLocaleString()} km<br>
+          Hazardous: ${n.is_potentially_hazardous_asteroid?"Yes 😱":"No 😌"}
+        `;
+        l.appendChild(div);
+      });
+    } catch {
+      l.innerHTML="Error loading asteroids.";
     }
+  }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
+  async function fetchPeople() {
+    const l=document.getElementById("peopleList");
+    l.innerHTML="Loading...";
+    try {
+      const d=await fetch("https://api.open-notify.org/astros.json").then(r=>r.json());
+      l.innerHTML=`${d.number} people are in space:<br>`;
+      d.people.forEach(p=>{
+        const div=document.createElement("div");
+        div.textContent=`👨‍🚀 ${p.name} (${p.craft})`;
+        l.appendChild(div);
+      });
+    } catch {
+      l.innerHTML="Error loading people.";
     }
-  </script>
+  }
+
+  async function searchGallery() {
+    const q=document.getElementById("gallery-query").value.trim();
+    const g=document.getElementById("gallery-results");
+    if(!q) return;
+    g.innerHTML="Searching...";
+    try {
+      const d=await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(q)}&media_type=image`)
+                   .then(r=>r.json());
+      const items=d.collection.items.slice(0,9);
+      if(!items.length) return g.innerHTML="No results.";
+      g.innerHTML="";
+      items.forEach(item=>{
+        const img=document.createElement("img");
+        img.src=item.links[0].href;
+        img.alt=item.data[0].title;
+        g.appendChild(img);
+      });
+    } catch {
+      g.innerHTML="Error searching media.";
+    }
+  }
+
+  // 🌠 Exoplanet Explorer
+  async function searchExoplanets() {
+    const q=document.getElementById("exo-query").value.trim();
+    const r=document.getElementById("exo-results");
+    if(!q) return;
+    r.innerHTML="Searching...";
+    try {
+      const url=`https://www.astropical.space/api-exo.php?which=name&limit=${encodeURIComponent(q)}&format=json`;
+      const data=await fetch(url).then(r=>r.json());
+      if (!data.length) return r.innerHTML="No planets found.";
+      r.innerHTML="";
+      data.forEach(p=>{
+        const div=document.createElement("div");
+        div.style="background:#ffffff22; padding:1rem; border-radius:1rem; margin:1rem 0;";
+        div.innerHTML=`
+          <strong>${p.name}</strong><br>
+          Mass: ${p["mass [J]"]} MJ<br>
+          Radius: ${p["radius [xJ]"]} RJ<br>
+          Distance: ${p["distance [psc]"]} pc<br>
+          Period: ${p["period [days]"]} d
+        `;
+        r.appendChild(div);
+      });
+    } catch {
+      r.innerHTML="Error loading exoplanets.";
+    }
+  }
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+</script>
+
 </body>
 </html>
