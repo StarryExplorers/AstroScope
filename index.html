@@ -55,7 +55,7 @@
   <button onclick="switchTab('people')">👩‍🚀 People</button>
   <button onclick="switchTab('gallery')">🖼️ Media Search</button>
   <button onclick="switchTab('exoplanets')">🪐 Exoplanet Explorer</button>
-  <button onclick="switchTab('space info')">📘 Astro Terms</button>
+  <button onclick="switchTab('astro-terms')">📘 Astro Terms</button>
 </div>
 
 <!-- APOD -->
@@ -117,6 +117,7 @@
     <p><strong>Galaxy:</strong> A massive group of stars, dust, and dark matter bound together — like the Milky Way! 🌌</p>
     <p><strong>Exoplanet:</strong> A planet that orbits a star outside our solar system 🪐</p>
     <p><strong>Rover:</strong> A robotic space explorer that drives on planets like Mars 🤖</p>
+   <div id="astro-terms"></div>
   </section>  
 
 <script>
@@ -251,6 +252,13 @@
       r.innerHTML="Error loading exoplanets.";
     }
   }
+ function switchSection(id) {
+  const sections = document.querySelectorAll("section");
+  sections.forEach(sec => sec.style.display = "none");
+
+  const target = document.getElementById(id);
+  if (target) target.style.display = "block";
+}
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
 </script>
