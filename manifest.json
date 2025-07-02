@@ -5,7 +5,6 @@
   "display": "standalone",
   "background_color": "#0a0f2c",
   "theme_color": "#1e3c72",
-  "orientation": "portrait",
   "description": "Explore space with NASA's amazing data and photos!",
   "icons": [
     {
