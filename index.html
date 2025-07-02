@@ -45,7 +45,11 @@
 </style>
 </head>
 <body>
-
+<div id="splash-screen" style="position:fixed; inset:0; background:#0a0f2c; color:white; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999;">
+  <img src="icon-192.png" alt="AstroScope Logo" width="100" style="margin-bottom: 1rem;">
+  <h2>🚀 Welcome to AstroScope</h2>
+  <p>Exploring the universe…</p>
+</div>
 <h1>🔭 AstroScope</h1>
 
 <div class="tabs">
@@ -251,7 +255,13 @@
       r.innerHTML="Error loading exoplanets.";
     }
   }
- 
+
+ window.addEventListener("load", () => {
+  setTimeout(() => {
+    const splash = document.getElementById("splash-screen");
+    if (splash) splash.style.display = "none";
+  }, 2000); // Show splash for 2 seconds
+});
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
 </script>
