@@ -14,6 +14,32 @@
     background: linear-gradient(to right, #1e3c72, #2a5298);
     color:white; text-align:center;
   }
+ #custom-splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 1s ease;
+}
+
+#custom-splash img {
+  width: 120px;
+  height: 120px;
+  border-radius: 20%;
+  margin-bottom: 1rem;
+}
+
+#custom-splash h1 {
+  font-size: 1.8rem;
+  color: white;
+}
   h1 { font-size:2.4rem; margin-bottom:1rem; }
   section {
     margin:2rem auto; padding:1.5rem;
@@ -45,10 +71,9 @@
 </style>
 </head>
 <body>
-<div id="splash-screen" style="position:fixed; inset:0; background:#0a0f2c; color:white; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999;">
-  <img src="icon-192.png" alt="AstroScope Logo" width="100" style="margin-bottom: 1rem;">
-  <h2>🚀 Welcome to AstroScope</h2>
-  <p>Exploring the universe…</p>
+<div id="custom-splash">
+  <img src="icon-192.png" alt="AstroScope Icon" />
+  <h1>🚀 Welcome to AstroScope</h1>
 </div>
 <h1>🔭 AstroScope</h1>
 
@@ -257,10 +282,11 @@
   }
 
  window.addEventListener("load", () => {
+  const splash = document.getElementById("custom-splash");
+  splash.style.opacity = 0;
   setTimeout(() => {
-    const splash = document.getElementById("splash-screen");
-    if (splash) splash.style.display = "none";
-  }, 2000); // Show splash for 2 seconds
+    splash.style.display = "none";
+  }, 1000); // 1 second fade-out
 });
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
