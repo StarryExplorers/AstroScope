@@ -123,10 +123,21 @@
   <div id="peopleList"></div>
 </section>
 
-<!-- Gallery -->
 <section id="gallery">
   <h2>🖼️ NASA Image & Video Search</h2>
-  <input type="text" id="gallery-query" placeholder="e.g. Saturn" />
+  <input type="text" id="gallery-query" list="suggestions" placeholder="Search for space photos" />
+  <datalist id="suggestions">
+    <option value="Nebula">
+    <option value="Galaxy">
+    <option value="Jupiter">
+    <option value="Mars">
+    <option value="Saturn">
+    <option value="Milky Way">
+    <option value="Black hole">
+    <option value="Moon">
+    <option value="Supernova">
+    <option value="Earth">
+  </datalist>
   <button onclick="searchGallery()">Search</button>
   <div id="gallery-results" class="gallery"></div>
 </section>
