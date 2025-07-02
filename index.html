@@ -16,28 +16,8 @@
       color: white;
       text-align: center;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin: 1rem 0;
-      flex-wrap: wrap;
-    }
-    .tabs button {
-      padding: 0.7rem 1.2rem;
-      font-size: 1rem;
-      background: #ffffff22;
-      color: white;
-      border: 1px solid #ffffff44;
-      border-radius: 0.7rem;
-      cursor: pointer;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
     section {
-      display: none;
       margin: 2rem auto;
       padding: 1.5rem;
       background: #ffffff11;
@@ -69,7 +49,7 @@
       gap: 1rem;
       margin-top: 1rem;
     }
-    #mars-gallery img {
+    #mars-gallery img, #gallery-results img {
       width: 100%;
       max-width: 300px;
       border-radius: 1rem;
@@ -79,15 +59,7 @@
 <body>
   <h1>🔭 AstroScope</h1>
 
-  <!-- 🌌 NAV TABS -->
-  <div class="tabs">
-    <button onclick="switchSection('apod')">🌌 APOD</button>
-    <button onclick="switchSection('mars-rover')">🚗 Mars Rover</button>
-    <button onclick="switchSection('asteroids')">☄️ Asteroids</button>
-    <button onclick="switchSection('people')">👩‍🚀 People in Space</button>
-  </div>
-
-  <!-- 🌌 Astronomy Picture of the Day -->
+  <!-- APOD Section -->
   <section id="apod">
     <h2>🌌 Astronomy Picture of the Day</h2>
     <input type="date" id="apod-date" />
@@ -99,48 +71,46 @@
     </div>
   </section>
 
-  <!-- 🚗 Mars Rover Photos -->
+  <!-- Mars Rover Photos -->
   <section id="mars-rover">
     <h2>🚗 Mars Rover Photos</h2>
-    <label for="rover">Select Rover:</label>
+    <label for="rover">Rover:</label>
     <select id="rover">
       <option value="curiosity">Curiosity</option>
       <option value="opportunity">Opportunity</option>
       <option value="spirit">Spirit</option>
     </select>
-    <label for="mars-date">Choose Date:</label>
+    <label for="mars-date">Date:</label>
     <input type="date" id="mars-date" max="2023-12-31" />
     <button onclick="getMarsPhotos()">📷 Show Photos</button>
     <div id="mars-gallery"></div>
   </section>
 
-  <!-- ☄️ Asteroid Close Approaches -->
+  <!-- Asteroids Section -->
   <section id="asteroids">
     <h2>☄️ Asteroid Close Approaches</h2>
-    <label for="asteroid-date">Select a Date:</label>
     <input type="date" id="asteroid-date" max="2025-12-31">
     <button onclick="getAsteroids()">🛰️ Get Approaches</button>
     <div id="asteroid-list"></div>
   </section>
 
-  <!-- 👩‍🚀 People in Space -->
+  <!-- People in Space -->
   <section id="people">
-    <h2>👩‍🚀 People Currently in Space</h2>
+    <h2>👩‍🚀 People in Space</h2>
     <button onclick="fetchPeople()">🔄 Refresh</button>
     <div id="peopleList" style="margin-top: 1rem;"></div>
   </section>
 
+  <!-- NASA Image & Video Gallery -->
+  <section id="nasa-gallery">
+    <h2>🖼️ NASA Image & Video Search</h2>
+    <input type="text" id="gallery-query" placeholder="e.g. Saturn, Nebula, Mars" />
+    <button onclick="searchGallery()">🔍 Search</button>
+    <div id="gallery-results"></div>
+  </section>
+
   <script>
     const API_KEY = "GoahzBndb1f0dDBn6OoWFi8qphcYSbKfD4kN7B6N";
-
-    function switchSection(id) {
-      document.querySelectorAll("section").forEach(sec => {
-        sec.style.display = "none";
-      });
-      document.getElementById(id).style.display = "block";
-    }
-
-    switchSection("apod"); // Default tab on load
 
     async function getAPOD() {
       const date = document.getElementById("apod-date").value;
@@ -165,23 +135,22 @@
     }
 
     async function getMarsPhotos() {
-      const rover = document.getElementById('rover').value;
-      const date = document.getElementById('mars-date').value;
-      const gallery = document.getElementById('mars-gallery');
-      gallery.innerHTML = "Loading photos...";
+      const rover = document.getElementById("rover").value;
+      const date = document.getElementById("mars-date").value;
+      const gallery = document.getElementById("mars-gallery");
+      gallery.innerHTML = "Loading...";
       const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=${API_KEY}`;
       try {
         const res = await fetch(url);
         const data = await res.json();
         if (data.photos.length === 0) {
-          gallery.innerHTML = "No photos found for this date.";
+          gallery.innerHTML = "No photos found.";
           return;
         }
         gallery.innerHTML = "";
         data.photos.slice(0, 10).forEach(photo => {
           const img = document.createElement("img");
           img.src = photo.img_src;
-          img.alt = `Mars photo by ${rover}`;
           gallery.appendChild(img);
         });
       } catch {
@@ -192,55 +161,75 @@
     async function getAsteroids() {
       const date = document.getElementById("asteroid-date").value;
       const list = document.getElementById("asteroid-list");
-      list.innerHTML = "Fetching data...";
+      list.innerHTML = "Fetching...";
       const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=${API_KEY}`;
       try {
         const res = await fetch(url);
         const data = await res.json();
         const neos = data.near_earth_objects[date];
         if (!neos || neos.length === 0) {
-          list.innerHTML = "No close approaches on this date.";
+          list.innerHTML = "No asteroids found.";
           return;
         }
         list.innerHTML = "";
         neos.slice(0, 10).forEach(neo => {
-          const item = document.createElement("div");
-          item.style.padding = "1rem";
-          item.style.marginBottom = "1rem";
-          item.style.background = "#ffffff22";
-          item.style.borderRadius = "1rem";
-          const name = neo.name;
-          const diameter = neo.estimated_diameter.meters.estimated_diameter_max.toFixed(1);
-          const speed = neo.close_approach_data[0].relative_velocity.kilometers_per_hour;
-          const distance = neo.close_approach_data[0].miss_distance.kilometers;
-          const hazardous = neo.is_potentially_hazardous_asteroid ? "Yes 😨" : "No 😌";
-          item.innerHTML = `
-            <strong>${name}</strong><br>
-            Diameter: ${diameter} m<br>
-            Speed: ${parseFloat(speed).toFixed(2)} km/h<br>
-            Miss Distance: ${parseFloat(distance).toLocaleString()} km<br>
-            Potentially Hazardous: ${hazardous}
+          const div = document.createElement("div");
+          div.style.margin = "1rem";
+          div.style.background = "#ffffff22";
+          div.style.borderRadius = "1rem";
+          div.style.padding = "1rem";
+          div.innerHTML = `
+            <strong>${neo.name}</strong><br>
+            Diameter: ${neo.estimated_diameter.meters.estimated_diameter_max.toFixed(1)} m<br>
+            Speed: ${parseFloat(neo.close_approach_data[0].relative_velocity.kilometers_per_hour).toFixed(2)} km/h<br>
+            Miss Distance: ${parseFloat(neo.close_approach_data[0].miss_distance.kilometers).toLocaleString()} km<br>
+            Hazardous: ${neo.is_potentially_hazardous_asteroid ? "Yes 😱" : "No 😌"}
           `;
-          list.appendChild(item);
+          list.appendChild(div);
         });
-      } catch (err) {
-        list.innerHTML = "Error fetching asteroid data.";
-        console.error(err);
+      } catch {
+        list.innerHTML = "Error loading asteroid data.";
       }
     }
 
     async function fetchPeople() {
       const list = document.getElementById("peopleList");
-      list.innerHTML = "Loading...";
+      list.innerHTML = "Loading people...";
       try {
         const res = await fetch("https://api.open-notify.org/astros.json");
         const data = await res.json();
-        list.innerHTML = `👩‍🚀 There are ${data.number} people in space:<br><br>`;
+        list.innerHTML = `${data.number} people are in space:<br><br>`;
         data.people.forEach(person => {
-          list.innerHTML += `🚀 ${person.name} (${person.craft})<br>`;
+          const div = document.createElement("div");
+          div.textContent = `👨‍🚀 ${person.name} (${person.craft})`;
+          list.appendChild(div);
         });
-      } catch (err) {
-        list.innerHTML = "Error fetching space people!";
+      } catch {
+        list.innerHTML = "Error fetching people data.";
+      }
+    }
+
+    async function searchGallery() {
+      const query = document.getElementById("gallery-query").value;
+      const gallery = document.getElementById("gallery-results");
+      if (!query) return;
+      gallery.innerHTML = "Searching...";
+      try {
+        const res = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image`);
+        const data = await res.json();
+        const items = data.collection.items.slice(0, 10);
+        if (items.length === 0) {
+          gallery.innerHTML = "No results found.";
+          return;
+        }
+        gallery.innerHTML = "";
+        items.forEach(item => {
+          const img = document.createElement("img");
+          img.src = item.links[0].href;
+          gallery.appendChild(img);
+        });
+      } catch {
+        gallery.innerHTML = "Error searching NASA images.";
       }
     }
 
